@@ -6,8 +6,9 @@
 
 {% block extrahead %}
 <script type="text/javascript">
-    jQuery(function () { Search.loadIndex("{{ pathto('searchindex.js', 1) }}"); });
+  jQuery(function () { Search.loadIndex("{{ pathto('searchindex.js', 1) }}"); });
 </script>
+<script type="text/javascript" src="{{ pathto('_static/language_data.js', 1) }}"></script>
 {# this is used when loading the search index using $.ajax fails,
      such as on Chrome for documents on localhost #}
 <script type="text/javascript" id="searchindexloader"></script>
@@ -98,7 +99,7 @@
                                         value="dxp"
                                     />
 
-                                    <span class="custom-control-label">{% trans %}DXP{% endtrans %}</span>
+                                    <span class="custom-control-label">{% trans %}DXP / Portal{% endtrans %}</span>
                                 </label>
                             </div>
 
@@ -113,6 +114,20 @@
                                     />
 
                                     <span class="custom-control-label">{% trans %}DXP Cloud{% endtrans %}</span>
+                                </label>
+                            </div>
+
+							<div class="custom-control custom-radio">
+                                <label>
+                                    <input
+                                        aria-label="{{ getLanguageLabel(language_code) }}"
+                                        class="custom-control-input"
+                                        name="productName"
+                                        type="radio"
+                                        value="reference"
+                                    />
+
+                                    <span class="custom-control-label">{% trans %}Reference{% endtrans %}</span>
                                 </label>
                             </div>
                         </div>
@@ -177,15 +192,19 @@
         },
         {
             name: 'commerce',
-            pathname: '/commerce/2.x/en/search.html'
+            pathname: '/commerce/latest/en/search.html'
         },
         {
             name: 'dxp',
-            pathname: '/dxp/7.x/en/search.html'
+            pathname: '/dxp/latest/en/search.html'
         },
         {
             name: 'dxp-cloud',
             pathname: '/dxp-cloud/latest/en/search.html'
+        },
+        {
+            name: 'reference',
+            pathname: '/reference/latest/en/search.html'
         }
     ];
 
@@ -197,6 +216,8 @@
         currentDocProduct = 'dxp-cloud'
     } else if (pathname.includes('analytics-cloud')) {
         currentDocProduct = 'analytics-cloud'
+    } else if (pathname.includes('reference')) {
+        currentDocProduct = 'reference'
     }
 
     const productSelect = document.querySelectorAll('[name="productName"]');

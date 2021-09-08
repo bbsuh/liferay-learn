@@ -1,4 +1,0 @@
-Kaleo Forms
-===========
-
-Coming soon!

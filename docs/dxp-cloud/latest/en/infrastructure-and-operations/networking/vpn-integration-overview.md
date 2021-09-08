@@ -6,7 +6,11 @@ Liferay DXP Cloud provides a VPN client-to-site connection that has port forward
 
 Subscribers can use redundant VPN tunnels by mapping their connections between their DXP Cloud services to their corresponding VPN server's IP addresses. The redundancy is placed in different availability zones to provide resiliency. The client-to-site approach covers connecting to a service running on the company network. This model is recommended for the containerized architecture and Kubernetes network layer provided.
 
-See the [VPN server limitations](../../reference/dxp-cloud-limitations.md#vpn-servers) section for more information.
+Once a VPN connection is configured, you can view log messages from the VPN server from your environment's Logs page by selecting *VPN Logs* from the dropdown list.
+
+![Select VPN Logs to view recent VPN activity in your environment.](./vpn-integration-overview/images/02.png)
+
+See the [VPN server limitations](../../reference/platform-limitations.md#vpn-servers) section for more information.
 
 ## Configuration
 
@@ -15,13 +19,19 @@ The client to site VPN feature supports the following protocols:
 * IPsec (IKEv2)
 * OpenVPN
 
-Subscribers can choose one of the protocols (IPSec or OpenVPN) to perform the connection from DXP Cloud console settings page for the desired environment. Any number of forwarding ports can be configured for the connection in the console UI. See [Connecting a VPN Server to DXP Cloud](./connecting-a-vpn-server-to-dxp-cloud.md) for more information.
+Subscribers can choose one of the protocols (IPSec or OpenVPN) to perform the connection from DXP Cloud console settings page for the desired environment. Any number of forwarding ports can be configured for the connection in the console UI.
+
+```note::
+   Using the ``IKEv2`` protocol with an IPsec server, you can either use ``MSCHAPv2`` or ``TLS`` authentication protocols. See `Basic Setup for an IPsec Server <./configuring-a-vpn-server.md#basic-setup-for-an-ipsec-server>`__ for more information.
+```
+
+See [Connecting a VPN Server to DXP Cloud](./connecting-a-vpn-server-to-dxp-cloud.md) for more information.
 
 ## Connecting DXP Cloud to an IPSec VPN Server
 
 In this use case, assume there is a DXP Portal instance running inside DXP Cloud and needs to access an HTTP service running inside an internal network.
 
-![Topology 2 - Portal instance accessing an HTTP service inside the customer’s company network](./vpn-integration-overview/images/02.png)
+![Topology 2 - Portal instance accessing an HTTP service inside the customer’s company network](./vpn-integration-overview/images/03.png)
 
 Note the following:
 

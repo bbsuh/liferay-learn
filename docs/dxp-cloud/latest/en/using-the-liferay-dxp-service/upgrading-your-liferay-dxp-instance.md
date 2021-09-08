@@ -3,7 +3,11 @@
 Liferay periodically releases new minor and major versions of Liferay DXP that include security and bug fixes, as well as enhancements. To upgrade to a new major Liferay DXP version increment, you must upgrade the DXP database.
 
 ```note::
-   For large data sets in production, there are several additional considerations to performing for a smooth upgrade. See `the guide to upgrading Liferay DXP <https://learn.liferay.com/dxp/7.x/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/upgrade-overview.html>`__ for a comprehensive overview of the core upgrade.
+   For large data sets in production, there are several additional considerations to performing for a smooth upgrade. See `the guide to upgrading Liferay DXP <https://learn.liferay.com/dxp/latest/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/upgrade-overview.html>`__ for a comprehensive overview of the core upgrade.
+```
+
+```note::
+   To update to new minor versions or service packs, instead see `Updating to a New Version of Liferay DXP <./updating-your-dxp-instance-to-a-new-minor-version.md>`_.
 ```
 
 ```important::
@@ -106,7 +110,7 @@ The database and document library are now in place and ready for you to perform 
 DXP bundles provide an upgrade tool that is used for data upgrades. This tool is invoked through a script included in the bundle, `db_upgrade.sh`.
 
 ```note::
-   The database upgrade tool can be pre-configured for more flexibility when running it. See `Using the Database Upgrade Tool <https://learn.liferay.com/dxp/7.x/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/using-the-database-upgrade-tool.html>`__ for more information on advanced usage.
+   The database upgrade tool can be pre-configured for more flexibility when running it. See `Using the Database Upgrade Tool <https://learn.liferay.com/dxp/latest/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/using-the-database-upgrade-tool.html>`__ for more information on advanced usage.
 ```
 
 Open a command prompt within your `LIFERAY_HOME/tools/portal-tools-db-upgrade-client` folder. Then, run the following command:
@@ -202,8 +206,10 @@ Upload the database and document library archives to the `backup` service by cal
 1. Run the following command to call the upload API after modifying it for your project:
 
     ```bash
-    curl -X POST https://backup-<PROJECT-NAME>-prd.lfr.cloud/backup/upload -H 'Content-Type: multipart/form-data' -H 'Authorization: Bearer <USER-TOKEN>' -F 'database=@/path/to/folder/database.tgz' -F 'volume=@/path/to/folder/volume.tgz'
+    curl -X POST https://backup-<PROJECT-NAME>-<ENV>.lfr.cloud/backup/upload -H 'Content-Type: multipart/form-data' -H 'Authorization: Bearer <USER-TOKEN>' -F 'database=@/path/to/folder/database.tgz' -F 'volume=@/path/to/folder/volume.tgz'
     ```
+
+    Replace `<PROJECT-NAME>` with the name of your project, and `/path/to/folder/` with the path your `.tgz` archives are located. Replace `<ENV>` with the abbreviation for the environment you want to upload the upgraded backup to (such as `dev`).
 
 When the call is complete, a new backup appears from your upload, on the _Backups_ page in the DXP Cloud console.
 
@@ -213,7 +219,7 @@ Follow these steps to restore a backup to your chosen environment:
 
 1. Log into the DXP Cloud console, if you are not already logged in.
 
-1. Navigate to your production environment, then click _Backups_ from the side menu.
+1. Navigate to the environment [you uploaded your backup to](#call-the-upload-api), then click _Backups_ from the side menu.
 
 1. Choose a backup from the list, and then click _Restore to_ from the Actions menu for that backup.
 
@@ -241,5 +247,6 @@ Congratulations! You have upgraded your DXP database to the new version and depl
 
 Learn more about DXP upgrades:
 
-* [Liferay DXP Upgrade Overview](https://learn.liferay.com/dxp/7.x/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/upgrade-overview.html)
-* [Using the Database Upgrade Tool](https://learn.liferay.com/dxp/7.x/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/using-the-database-upgrade-tool.html)
+* [Liferay DXP Upgrade Overview](https://learn.liferay.com/dxp/latest/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/upgrade-overview.html)
+* [Updating Your DXP Instance to a New Minor Version)(./updating-your-dxp-instance-to-a-new-minor-version.md)
+* [Using the Database Upgrade Tool](https://learn.liferay.com/dxp/latest/en/installation-and-upgrades/upgrading-liferay/upgrade-basics/using-the-database-upgrade-tool.html)

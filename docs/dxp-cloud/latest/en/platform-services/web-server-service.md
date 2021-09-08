@@ -6,7 +6,7 @@ high-performance web server.
 
 ![Figure 1: The web server is one of several services available in DXP Cloud.](./web-server-service/images/01.png)
 
-See the [Web server service limitations](../dxp-cloud-limitations.md#web-server-service) section for more information.
+See the [Web server service limitations](../platform-limitations.md#web-server-service) section for more information.
 
 ## Configurations
 
@@ -32,11 +32,20 @@ Files in `/webserver/configs/{ENV}/` will be copied as overrides into /etc/nginx
 
 ## Environment Variables
 
-This service has no environment variables specific to DXP Cloud. All environment 
-variables and other forms of configuration for Nginx are in the 
-[official Nginx documentation](https://docs.nginx.com/). 
-You can set such configurations and environment variables in the `configs/{ENV}/` 
-directory and `LCP.json`, respectively. 
+These environment variables are available for the web server service:
+
+| Name | Default value | Description |
+| --- | --- | --- |
+| `LCP_HAPROXY_RESOLVER_HOLD_TIME` | `10` | Configures the [`hold` configuration](https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.3.2-hold) for the HAProxy load balancer. This configuration is for the `valid` status.|
+| `LCP_HAPROXY_RESOLVER_RETRIES` | `3` | Configures the [`resolve_retries` configuration](https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.3.2-resolve_retries) for the HAProxy load balancer (the number of retries the session will attempt to connect to the server before giving up).|
+| `LCP_HAPROXY_RESOLVER_TIMEOUT_RESOLVE` | `1` | Configures the [`timeout` configuration](https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.3.2-timeout) for the HAProxy load balancer (the number of seconds for an event timeout). This configuration is for the `resolve` event.|
+| `LCP_HAPROXY_RESOLVER_TIMEOUT_RETRY` | `1` | Configures the [`timeout` configuration](https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.3.2-timeout) for the HAProxy load balancer (the number of seconds for an event timeout). This configuration is for the `retry` event.|
+| `LCP_HAPROXY_SERVER_TEMPLATE_BACKEND_NUM` | `10` | Overrides the maximum number of instances for any service. If you plan to use [auto-scaling](../manage-and-optimize/auto-scaling.md), then set this to the highest value needed. |
+| `LCP_WEBSERVER_LOG_FORMAT` |   | Customizes the format for Nginx logging. See the [official Nginx documentation](https://docs.nginx.com/nginx/admin-guide/monitoring/logging/#setting-up-the-access-log). |
+
+The [Ingress Load Balancer](../infrastructure-and-operations/networking/load-balancer.md) is also configured via the web server service. Environment variables can be added to this service to configure the load balancer and custom domains. See [the Load Balancer environment variables reference](../infrastructure-and-operations/networking/load-balancer.md#environment-variables-reference) for more information.
+
+All environment variables and other forms of configuration for Nginx are in the [official Nginx documentation](https://docs.nginx.com/). You can set such configurations in the `configs/{ENV}/` directory, and environment variables in the service's `LCP.json` file.
 
 ## Scripts
 

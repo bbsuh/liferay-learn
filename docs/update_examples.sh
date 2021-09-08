@@ -39,17 +39,49 @@ function copy_template {
 			fi
 
 			popd
-		else
+		fi
+
+		local package_json_file_name="$(echo $(find ${zip_dir_name} -name package.json -print) | head -n1)"
+
+		if [ -n "${package_json_file_name}" ]
+		then
 			cp -fr _template/js/* ${zip_dir_name}
+		fi
+
+		if [ -z "${gradle_build_file_name}" ] && [ -z "${package_json_file_name}" ]
+		then
+			pushd $(git rev-parse --show-toplevel)
+
+			./gradlew formatSource -DformatSource.source.base.dir=./docs/${zip_dir_name}
+
+			popd
 		fi
 	done
 }
 
 function update_examples {
-	for update_example_script_name in `find . -name "update_example.sh" -type f`
-	do
-		echo ${update_example_script_name}
-	done
+	if [ -n "${1}" ] && [ "${1}" != "prod" ]
+	then
+		local zip_dir_name=`find . -name "liferay-${1}.zip" -type d`
+
+		if [[ -n "${zip_dir_name}" ]] && [[ -f ${zip_dir_name}/../update_example.sh ]]
+		then
+			pushd "${zip_dir_name}/.."
+
+			./update_example.sh
+
+			popd
+		fi
+	else
+		for update_example_script_name in `find . -name "update_example.sh" -type f`
+		do
+			pushd $(dirname "${update_example_script_name}")
+
+			./$(basename "${update_example_script_name}")
+
+			popd
+		done
+	fi
 }
 
 function main {
@@ -57,7 +89,7 @@ function main {
 
 	copy_template ${1}
 
-	update_examples
+	update_examples ${1}
 }
 
 main "${@}"

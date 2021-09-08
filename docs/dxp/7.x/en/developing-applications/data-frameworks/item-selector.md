@@ -1,3 +1,0 @@
-# Item Selector
-
-Coming soon!

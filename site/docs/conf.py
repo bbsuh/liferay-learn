@@ -23,9 +23,10 @@ author = "Liferay"
 copybutton_image_path = "img/paste.svg"
 copyright = "2020, Liferay"
 extensions = [
+    "myst_parser",
     "notfound.extension",
-    "recommonmark",
     "sphinx_copybutton",
+    "sphinxext.opengraph",
     "sphinx_markdown_tables",
 ]
 html_context = {
@@ -48,6 +49,9 @@ log = logging.getLogger(__name__)
 master_doc = "contents"
 notfound_no_urls_prefix = True
 notfound_template = "404.html"
+ogp_image = "https://learn.liferay.com/_static/liferay-waffle.svg"
+ogp_site_name = "Liferay Learn"
+ogp_site_url = "https://learn.liferay.com/"
 project = "Liferay Learn"
 release = "1.0"
 source_suffix = [".md", ".rst"]

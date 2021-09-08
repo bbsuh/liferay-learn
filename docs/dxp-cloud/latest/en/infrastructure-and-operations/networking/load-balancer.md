@@ -23,16 +23,46 @@ Having a dedicated load balancer provides a myriad of enhanced features, such as
 
 ## CDN
 
-Liferay's Content Delivery Network (CDN) is a built-in feature provided with DXP Cloud. This CDN caches your content globally, greatly enhancing your delivery speed. This CDN is disabled by default but you can turn it on in your `LCP.json`:
+Liferay's Content Delivery Network (CDN) is a built-in feature provided with DXP Cloud. This CDN caches your static content globally, greatly enhancing your delivery speed. This CDN is disabled by default, but you can enable it for a service in your `LCP.json` file, within the `loadbalancer` object:
 
 ```json
-"cdn": true
+{
+    "loadBalancer": {
+        "cdn": true
+    }
+}
 ```
 
 ![The CDN's status is visible on the Network page.](./load-balancer/images/02.png)
 
-```note::
-   The CDN is not currently supported for the Dubai/Northern UAE region.
+```{note}
+The CDN is not currently supported for the Dubai/Northern UAE region.
+```
+
+### Clearing the CDN Cache
+
+The CDN improves performance by reducing latency for delivering static content to users. However, it is possible that some of this content is delivered to users before the cache is updated, when the content is no longer valid.
+
+If it is necessary to clear the CDN cache to force the content to be retrieved again, then you can manually clear it from the DXP Cloud console:
+
+1. Log into the DXP Cloud console and navigate to the appropriate environment.
+
+1. Click *Network* from the menu on the left.
+
+1. Under the *CDN* section, click *Clear CDN Cache...*
+
+    ![Click the Clear CDN Cache button on the Network page for your environment.](./load-balancer/images/03.png)
+
+1. On the Clear CDN cache page, select all the checkboxes to confirm that you understand the consequences of clearing the cache, and that it applies to all services with CDN enabled.
+
+    ![The Clear CDN cache page.](./load-balancer/images/04.png)
+
+1. Click *Request Cache Clearance*.
+
+The request is sent to clear the cache when you click the button. Allow up to 30 minutes for the cache to be cleared.
+
+```{warning}
+Clearing the CDN cache too frequently can negatively impact server performance, because it can cause a short-term spike in requests to your services that the cache would have served otherwise. Limit clearing the cache to exceptional circumstances to mitigate this impact.
 ```
 
 ## Port
@@ -43,7 +73,7 @@ You can set which internal port (`targetPort`) the load balancer's service endpo
 "targetPort": 3000
 ```
 
-![The load balancer shows your port configurations.](./load-balancer/images/03.png)
+![The load balancer shows your port configurations.](./load-balancer/images/05.png)
 
 ## Custom SSL
 
@@ -55,22 +85,57 @@ Domains created by DXP Cloud's infrastructure at `.lfr.cloud` are covered by a w
 
 For all custom domains added through the console or `LCP.json`, Liferay DXP Cloud reaches out to [Let's Encrypt](https://letsencrypt.org/) for a certificate that renews automatically and covers all custom domains you create.
 
-### Custom SSL Certificates
+### Adding Custom SSL Certificates
 
-You can also add your own SSL certificate to cover any custom domains you create. However, only one certificate can be used at a time for a service's custom domains: either the one provided by Let's Encrypt, or the custom one specified in its `LCP.json`. If both certificates exist, the custom certificate takes precedent.
+You can also add your own SSL certificate to cover any custom domains you create. You can either use the SSL certificate provided by Let's Encrypt (for any custom domains added through the DXP Cloud console), or you can define one or more custom certificates in your `webserver` service's `LCP.json` file. If certificates exist in both places, then any custom certificates defined in the `LCP.json` file take precedent.
 
-When creating custom certificates, note that DXP Cloud only accepts keys and certificates that are in the proper PEM format with [Base64](https://tools.ietf.org/html/rfc4648#section-4) encoding, which must include encapsulation boundaries:
+When creating custom certificates, note that DXP Cloud only accepts keys and certificates that are in the proper PEM format with [Base64](https://tools.ietf.org/html/rfc4648#section-4) encoding, which must include encapsulation boundaries.
+
+To add a single SSL certificate to the `LCP.json` file, add an `ssl` object with certificates `key` and `crt` values inside of the [`loadbalancer` object](./custom-domains.md#adding-a-custom-domain-via-lcp-json):
 
 ```json
-"ssl": {
-  "key": "...",
-  "crt": "..."
+{
+    "loadbalancer": {
+        "ssl": {
+            "key": "...",
+            "crt": "..."
+        }
+    }
 }
 ```
 
-```important::
-   The ``ssl`` property (containing the ``key`` and ``crt`` properties) must be contained within the ``loadbalancer`` property to work properly.
+Using the `ssl` object in your `LCP.json` creates a single custom SSL certificate that maps to all custom domains used in this environment.
+
+### Mapping Multiple SSL Certificates to Custom Domains
+
+You can also map different SSL certificates to multiple custom domains by using the `certs` property instead of the `ssl` object.
+
+Use the `certs` property in your web server's `LCP.json` file to create a list of certificates that you can use. Group the `key` and `crt` values for each certificate together with the custom domains they will map to:
+
+```json
+{
+    "loadbalancer": {
+        "certs": [
+            {
+                "customDomains": ["acme.liferay.cloud"],
+                "key": "...",
+                "crt": "..."
+            },
+            {
+                "customDomains": ["acme2.liferay.cloud"],
+                "key": "...",
+                "crt": "..."
+            }
+        ]
+    }
+}
 ```
+
+```{note}
+Mapping multiple SSL certificates to your custom domains requires adding the `certs` property to the `webserver` service's `LCP.json` file. Adding custom domains through the DXP Cloud console instead maps all of the custom domains to a single certificate.
+```
+
+### Generating an SSL Certificate
 
 When generating a key, you must use either RSA-2048 or ECDSA P-256 encryption algorithms and avoid using passphrase protected keys.
 
@@ -116,13 +181,13 @@ To encode the contents of these files and use them, perform the following steps:
 
 The `key` and `cert` values are now encoded and usable in your web server configuration.
 
-```tip::
-   It is possible to include multiple values for the ``cert`` by concatenating the base64-encoded results into a single string, within the ``crt`` field.
+```{tip}
+It is possible to include multiple values for the `cert` by concatenating certificates together into a single string, and then encoding the result in base-64 for the `crt` field.
 ```
 
 The Network page shows any custom certificates, with a maximum of one per service. For more information, see [Custom Domains](./custom-domains.md).
 
-![DXP Cloud shows the status of SSL certificates that cover custom domains.](./load-balancer/images/04.png)
+![DXP Cloud shows the status of SSL certificates that cover custom domains.](./load-balancer/images/06.png)
 
 ## Environment Variables Reference
 
@@ -131,8 +196,8 @@ The Network page shows any custom certificates, with a maximum of one per servic
 | `cdn` | false | CDN is disabled by default; can be enabled by setting to `true` |
 | `customDomains` | ["example.com", "www.example.com"] | Name of the custom domain; can list more than one |
 | `targetPort` | 3000 | Port number for the load balancer |
-| `key` | | SSL certificate's key in Base64 format |
-| `crt` | | SSL certificate's crt in Base64 format |
+| `key` | | SSL certificate's key in Base64 format. Group this in an [`ssl`](#adding-custom-ssl-certificates) object, or a [`certs`](#mapping-multiple-ssl-certificates-to-custom-domains) object (to list multiple certificates). |
+| `crt` | | SSL certificate's crt in Base64 format. Group this in an [`ssl`](#adding-custom-ssl-certificates) object, or a [`certs`](#mapping-multiple-ssl-certificates-to-custom-domains) object (to list multiple certificates). |
 
 ## Additional Information
 

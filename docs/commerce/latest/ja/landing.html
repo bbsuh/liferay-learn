@@ -1,0 +1,189 @@
+<script type="module">
+	import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.min.js'
+
+	const page = new Vue({
+		el: '#landingPage',
+		data: {
+			cards: [
+				{
+					icon: '#installation-and-upgrades-logo',
+					sectionName: 'インストールとアップグレード',
+					sectionURL: 'installation_and_upgrades.html',
+					subsections: [
+						{
+							name: 'Liferay Commerce Dockerイメージの使用',
+							url: 'installation-and-upgrades/using-the-liferay-commerce-docker-image.html'
+						},
+						{
+							name: 'Liferay Commerce Enterpriseのアクティベーション',
+							url: 'installation-and-upgrades/activating-liferay-commerce-enterprise.html'
+						},
+						{
+							name: 'Liferay Commerceのアップグレード',
+							url: 'installation-and-upgrades/upgrading-liferay-commerce.html'
+						}
+					]
+				},
+				{
+					icon: '#getting-started-logo',
+					sectionName: '店舗を開始',
+					sectionURL: 'starting_a_store.html',
+					subsections: [
+						{
+							name: 'Minium Acceleratorを使用してB2Bストアをすぐに開始する',
+							url: 'starting-a-store/using-the-minium-accelerator-to-jump-start-your-b2b-store.html'
+						},
+						{
+							name: '管理者アカウントの概要',
+							url: 'starting-a-store/introduction-to-the-admin-account.html'
+						},
+						{
+							name: 'アクセラレータ',
+							url: 'starting-a-store/accelerators.html'
+						}
+					]
+				},
+				{
+					icon: '#developing-applications-logo',
+					sectionName: 'カタログの管理',
+					sectionURL: 'managing_a_catalog.html',
+					subsections: [
+						{
+							name: '新しいカタログを作成する',
+							url: 'managing-a-catalog/catalogs/creating-a-new-catalog.html'
+						},
+						{
+							name: 'チャネルについて',
+							url: 'starting-a-store/channels.html'
+						},
+						{
+							name: '在庫管理の概要',
+							url: 'managing-a-catalog/managing-inventory/introduction-to-managing-inventory.html'
+						}
+					]
+				},
+				{
+					icon: '#site-building-logo',
+					sectionName: 'ストアコンテンツの作成',
+					sectionURL: 'creating_store_content.html',
+					subsections: [
+						{
+							name: 'ストアフロントの作成',
+							url: 'creating-store-content/creating-your-storefront.html'
+						},
+						{
+							name: '清算',
+							url: 'creating-store-content/commerce-storefront-pages/checkout.html'
+						},
+						{
+							name: 'カタログページの作成',
+							url: 'creating-store-content/creating-a-catalog-page.html'
+						}
+					]
+				},
+				{
+					icon: '#collaboration-and-social-logo',
+					sectionName: '商品のプロモーション',
+					sectionURL: 'promoting_products.html',
+					subsections: [
+						{
+							name: '割引について',
+							url: 'promoting-products/introduction-to-discounts.html'
+						},
+						{
+							name: '割引を作成する',
+							url: 'promoting-products/creating-a-discount.html'
+						}
+					]
+				},
+				{
+					icon: "#users-and-permissions-logo",
+					sectionName: 'アカウント管理',
+					sectionURL: 'account_management.html',
+					subsections: [
+						{
+							name: '新しいアカウントを作成する',
+							url: 'account-management/creating-a-new-account.html'
+						},
+						{
+							name: 'アカウントロール',
+							url: 'account-management/account-roles.html'
+						},
+						{
+							name: 'アカウントへのアドレスの追加',
+							url: 'account-management/adding-addresses-to-an-account.html'
+						}
+					]
+				},
+				{
+					icon: '#orders-and-fulfillment-logo',
+					sectionName: '注文とフルフィルメント',
+					sectionURL: 'orders_and_fulfillment.html',
+					subsections: [
+						{
+							name: '注文の処理',
+							url: 'orders-and-fulfillment/orders/processing-an-order.html'
+						},
+						{
+							name: '発送の概要',
+							url: 'orders-and-fulfillment/shipments/introduction-to-shipments.html'
+						},
+						{
+							name: '注文ワークフローの概要',
+							url: 'orders-and-fulfillment/order-workflows/introduction-to-order-workflows.html'
+						}
+					]
+				},
+				{
+					icon: '#system-administration-logo',
+					sectionName: 'ストアサイトの管理',
+					sectionURL: 'store_administration.html',
+					subsections: [
+						{
+							name: 'Liferay Commerce設定の概要',
+							url: 'store-administration/liferay-commerce-configuration-overview.html'
+						},
+						{
+							name: '支払方法の管理',
+							url: 'store-administration/configuring-payment-methods/managing-payment-methods.html'
+						},
+						{
+							name: '為替レートの管理',
+							url: 'store-administration/currencies/managing-exchange-rates.html'
+						}
+					]
+				},
+				{
+					icon: '#headless-delivery-logo',
+					sectionName: '開発者ガイド',
+					sectionURL: 'developer_guide.html',
+					subsections: [
+						{
+							name: 'Liferay Commerce開発者ガイドの概要',
+							url: 'developer-guide/introduction-to-the-liferay-commerce-developer-guide.html'
+						},
+						{
+							name: '新しい商品タイプの追加',
+							url: 'developer-guide/adding-a-new-product-type.html'
+						},
+						{
+							name: 'カスタム清算ステップの実装',
+							url: 'developer-guide/implementing-a-custom-checkout-step.html'
+						}
+					]
+				},
+				{
+					icon: '#get-help-logo',
+					sectionName: 'サポート',
+					sectionURL: 'get_help.html',
+					subsections: [
+						{
+							name: 'Liferay Commerce修正プログラム配信方法',
+							url: 'get-help/commerce-enterprise-support/liferay-commerce-fix-delivery-method.html'
+						}
+					]
+				}
+			]
+		}
+	})
+</script>

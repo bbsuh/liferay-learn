@@ -7,13 +7,13 @@ readonly CURRENT_DIR_NAME=$(dirname "$0")
 source ../_common.sh
 
 function activate_venv {
-	if [[ "$(uname)" == "Darwin" || "$(uname)" == "Linux" ]]
+	if [ "$(uname)" == "Darwin" ] || [ "$(uname)" == "Linux" ]
 	then
 		python3 -m venv venv
 
 		source venv/bin/activate
 	else
-		if [[ -z $(find ${PWD} -maxdepth 1 -mindepth 1 -name venv -type d) ]]
+		if [ -z $(find "${PWD}" -maxdepth 1 -mindepth 1 -name venv -type d) ]
 		then
 			python -m venv ${PWD}/venv
 		fi
@@ -22,27 +22,20 @@ function activate_venv {
 	fi
 }
 
-function check_args {
-	if [[ ${#} -eq 0 ]]
+function check_usage {
+	if [ "${#}" -eq 0 ]
 	then
 		return
 	fi
 
-	if [[ ${#} -eq 1 ]]
+	if [ "${#}" -ge 1 ]
 	then
-		if [ "${1}" != "prod" ]
+		if [ "${1}" != "prod" ]  &&  [[ ${1} != *".md" ]]
 		then
-			echo "Invalid Argument: Pass no arguments to build for dev, or pass \"prod\" to build for production."
+			echo "Usage: Pass no arguments to build for development. Pass \"prod\" to build for production. Pass the file name of a markdown article to build a single article preview."
 
 			exit 1
 		fi
-	fi
-
-	if [[ ${#} -gt 1 ]]
-	then
-		echo "Too Many Arguments: Pass no arguments to build for dev, or pass \"prod\" to build for production."
-
-		exit 1
 	fi
 }
 
@@ -68,18 +61,26 @@ function configure_env {
 
 	check_utils 7z pip3
 
-	pip_install \
-		nodeenv recommonmark wheel \
-		\
-		sphinx sphinx-copybutton sphinx-intl sphinx-markdown-tables sphinx-notfound-page
+	pip install pipenv
+
+	pipenv install
 
 	if [ "${1}" == "prod" ]
 	then
-		nodeenv -p
+		nodeenv -p --node=15.14.0
 
 		activate_venv
 
 		npm_install generator-liferay-fragments generator-liferay-theme yo
+	fi
+}
+
+function echo_path {
+	if [[ "${1}" == *".md" ]]
+	then
+		echo "$(find build/output -name ${1%.*}.html)"
+	else
+		echo "$(find build/output -maxdepth 4 -mindepth 2 -name index.html)"
 	fi
 }
 
@@ -101,15 +102,38 @@ function generate_sphinx_input {
 	do
 		local product_version_language_dir_name=$(get_product_version_language_dir_name)
 
-		mkdir -p build/input/"${product_version_language_dir_name}"/docs
+		mkdir -p build/input/"${product_version_language_dir_name}"
 
 		local product_version_english_dir_name=$(get_product_version_language_dir_name | sed 's@/[^/]*$@/en@')
 
-		rsync -a --exclude '*.md' --exclude '*.rst' --ignore-existing ../docs/"${product_version_english_dir_name}"/* build/input/"${product_version_language_dir_name}"/
-
 		cp -R docs/* build/input/"${product_version_language_dir_name}"
 
-		cp -R ../docs/"${product_version_language_dir_name}"/* build/input/"${product_version_language_dir_name}"
+		if [[ "${1}" == *".md" ]]
+		then
+			pushd ../docs
+
+			for article_file_name in $(find "${product_version_language_dir_name}" -name "${1}")
+			do
+				rsync -a ${product_version_language_dir_name}/*.* ${product_version_english_dir_name}/images ../site/build/input/${product_version_language_dir_name}
+
+				local article_dir_name=$(dirname ${article_file_name} | sed "s,${product_version_language_dir_name},,g")
+
+				mkdir -p ../site/build/input/${product_version_language_dir_name}/${article_dir_name}
+
+				cp ${article_file_name} ../site/build/input/${product_version_language_dir_name}/${article_dir_name}
+
+				if [[ -n $(find ${product_version_english_dir_name}/${article_dir_name} -name $(basename -s .md ${article_file_name}) -type d) ]]
+				then
+					rsync -a ${product_version_english_dir_name}${article_dir_name}/$(basename -s .md ${article_file_name})/* ../site/build/input/${product_version_language_dir_name}/${article_dir_name}/$(basename -s .md ${article_file_name})
+				fi
+			done
+
+			pushd ../site
+		else
+			rsync -a --exclude "*.md" --exclude "*.rst" --ignore-existing ../docs/"${product_version_english_dir_name}"/* build/input/"${product_version_language_dir_name}"/
+
+			cp -R ../docs/"${product_version_language_dir_name}"/* build/input/"${product_version_language_dir_name}"
+		fi
 	done
 
 	rsync -a homepage/* build/input/homepage --exclude={'*.json','node_modules'}
@@ -122,8 +146,6 @@ function generate_sphinx_input {
 	do
 		sed -i "s/${LIFERAY_LEARN_COMMERCE_DOCKER_IMAGE_TOKEN}/${LIFERAY_LEARN_COMMERCE_DOCKER_IMAGE_VALUE}/g" "${md_file_name}"
 		sed -i "s/${LIFERAY_LEARN_COMMERCE_GIT_TAG_TOKEN}/${LIFERAY_LEARN_COMMERCE_GIT_TAG_VALUE}/g" "${md_file_name}"
-
-
 		sed -i "s/${LIFERAY_LEARN_DXP_DOCKER_IMAGE_TOKEN}/${LIFERAY_LEARN_DXP_DOCKER_IMAGE_VALUE}/g" "${md_file_name}"
 		sed -i "s/${LIFERAY_LEARN_PORTAL_DOCKER_IMAGE_TOKEN}/${LIFERAY_LEARN_PORTAL_DOCKER_IMAGE_VALUE}/g" "${md_file_name}"
 		sed -i "s/${LIFERAY_LEARN_PORTAL_GIT_TAG_TOKEN}/${LIFERAY_LEARN_PORTAL_GIT_TAG_VALUE}/g" "${md_file_name}"
@@ -151,23 +173,23 @@ function generate_static_html {
 
 		for html_file_name in $(find build/output/"${product_version_language_dir_name}" -name *.html -type f)
 		do
-			sed -i 's/.md"/.html"/g' ${html_file_name}
+			sed -i '/github\.com\/liferay\/liferay\-learn/ ! s/.md"/.html"/g' ${html_file_name}
 			sed -i 's/.md#/.html#/g' ${html_file_name}
 			sed -i 's/README.html"/index.html"/g' ${html_file_name}
 			sed -i 's/README.html#/index.html#/g' ${html_file_name}
 		done
 
 		#
-		# Include unbuilt resources (root level files only) in the built site.
+		# Include MP4 files in the output.
 		#
 
-		for resources_dir in $(find build/input/"${product_version_language_dir_name}" -name resources -prune -type d)
+		for images_dir in $(find build/input/"${product_version_language_dir_name}" -name images -prune -type d)
 		do
-			if [[ -n $(find "${resources_dir}" -maxdepth 1 -type f) ]]
+			if [[ -n $(find "${images_dir}" -name "*.mp4" -type f) ]]
 			then
-				mkdir -p "${resources_dir/input/output}"
+				mkdir -p "${images_dir/input/output}"
 
-				find "${resources_dir}" -maxdepth 1 -type f -exec cp {} "${resources_dir/input/output}" \;
+				find "${images_dir}" -name "*.mp4" -type f -exec cp {} "${images_dir/input/output}" \;
 			fi
 		done
 
@@ -233,10 +255,42 @@ function get_product_version_language_dir_name {
 	echo "${product}"/"${version}"/"${language}"
 }
 
+function unzip_reference_docs {
+
+	#
+	# liferay-ce-portal-doc-*.zip
+	#
+
+	if [[ ${1} != *".md" ]]
+	then
+		curl -L https://github.com/liferay/liferay-portal/releases/download/"${LIFERAY_LEARN_PORTAL_GIT_TAG_VALUE}"/"${LIFERAY_LEARN_PORTAL_DOC_FILE_NAME}" > liferay-ce-portal-doc.zip
+
+		7z x liferay-ce-portal-doc.zip
+
+		mv liferay-ce-portal-doc-${LIFERAY_LEARN_PORTAL_GIT_TAG_VALUE}/* ./build/output/reference/latest/en/dxp
+
+		rmdir liferay-ce-portal-doc-${LIFERAY_LEARN_PORTAL_GIT_TAG_VALUE}
+
+		rm -f liferay-ce-portal-doc.zip
+
+		#
+		# portlet-api-3.0.1-javadoc.jar
+		#
+
+		curl https://repo1.maven.org/maven2/javax/portlet/portlet-api/3.0.1/portlet-api-3.0.1-javadoc.jar -O
+
+		mkdir ../site/build/output/reference/latest/en/dxp/portlet-api
+
+		7z x -o../site/build/output/reference/latest/en/portlet-api portlet-api-3.0.1-javadoc.jar
+
+		rm -f portlet-api-3.0.1-javadoc.jar
+	fi
+}
+
 function main {
 	pushd "${CURRENT_DIR_NAME}" || exit 1
 
-	check_args "${@}"
+	check_usage ${@}
 
 	configure_env ${1}
 
@@ -244,25 +298,19 @@ function main {
 
 	generate_static_html
 
+	unzip_reference_docs ${1}
+
 	upload_to_server
+
+	echo_path ${1}
 }
 
 function npm_install {
 	for package_name in "${@}"
 	do
-		if [[ -z $(npm list --depth=0 --global --loglevel=silent --no-versions --parseable | grep ${package_name}) ]]
+		if [ -z $(npm list --depth=0 --global --loglevel=silent --no-versions --parseable | grep "${package_name}") ]
 		then
 			npm install -g ${package_name}
-		fi
-	done
-}
-
-function pip_install {
-	for package_name in "${@}"
-	do
-		if [[ -z $(pip3 list --disable-pip-version-check --format=columns | grep ${package_name}) ]]
-		then
-			pip3 install --disable-pip-version-check ${package_name}
 		fi
 	done
 }

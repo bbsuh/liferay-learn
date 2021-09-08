@@ -1,0 +1,83 @@
+<script type="module">
+	import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.min.js'
+
+	const page = new Vue({
+		el: '#landingPage',
+		data: {
+			cards: [
+				{
+					sectionName: 'Web Content Articles',
+					sectionURL: 'web-content/web_content_articles.html',
+					showAll: false,
+					subsections: [
+						{
+							name: 'Adding a Basic Web Content Article',
+							url: 'web-content/web-content-articles/adding-a-basic-web-content-article.html'
+						},
+					]
+				},
+				{
+					sectionName: 'Web Content Structures',
+					sectionURL: 'web-content/web_content_structures.html',
+					showAll: false,
+					subsections: [
+						{
+							name: 'Understanding Web Content Structures',
+							url: 'web-content/web-content-structures/understanding-web-content-structures.html'
+						},
+						{
+							name: 'Creating Structures',
+							url: 'web-content/web-content-structures/creating-structures.html'
+						},
+						{
+							name: 'Configuring Structure Fields',
+							url: 'web-content/web-content-structures/understanding-web-content-structures.html'
+						},
+					]
+				},
+				{
+					sectionName: 'Web Content Templates',
+					sectionURL: 'web-content/web_content_templates.html',
+					showAll: false,
+					subsections: [
+						{
+							name: 'Creating Web Content Templates',
+							url: 'web-content/web-content-templates/creating-web-content-templates.html'
+						},
+						{
+							name: 'Embedding Widgets in Templates',
+							url: 'web-content/web-content-templates/embedding-widgets-in-templates.html'
+						},
+						{
+							name: 'Using Taglibs in Templates',
+							url: 'web-content/web-content-templates/using-taglibs-in-templates.html'
+						},
+					]
+				},
+				{
+					sectionName: 'Translating Web Content',
+					sectionURL: 'web-content/translating_web_content.html',
+					showAll: false,
+					subsections: [
+						{
+							name: 'Manually Translating Web Content',
+							url: 'web-content/translating-web-content/manually-translating-web-content.html'
+						},
+						{
+							name: 'Exporting and Importing Translations',
+							url: 'web-content/translating-web-content/exporting-and-importing-translations.html'
+						},
+						{
+							name: 'Automatically Translating Web Content',
+							url: 'web-content/translating-web-content/automatically-translating-web-content.html'
+						},
+					]
+				},
+				{
+					sectionName: 'Developer Guide (Coming Soon)',
+					sectionURL: 'web-content/developer_guide.html',
+				},
+			]
+		}
+	})
+</script>

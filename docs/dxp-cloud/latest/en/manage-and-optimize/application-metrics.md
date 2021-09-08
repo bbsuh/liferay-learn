@@ -48,7 +48,7 @@ Users can view allocated resources from the DXP Cloud console.
 
 With Liferay DXP Cloud, you can integrate [Dynatrace's](https://www.dynatrace.com/) advanced performance monitoring with your production environments.
 
-See the [Dynatrace limitations](../reference/dxp-cloud-limitations.md#dynatrace) for more information.
+See the [Dynatrace limitations](../reference/platform-limitations.md#dynatrace) for more information.
 
 ### Integrating Dynatrace with Production Environments
 
@@ -58,15 +58,16 @@ Follow these steps to integrate Dynatrace:
 
 1. Generate the Dynatrace secret `token` and `tenant` values.
 
-1. Add Dynatrace environment variables to the `LCP.json` file in the Liferay service's production environment. For example:
+1. Add the Dynatrace `token` value as a [Secret](../infrastructure-and-operations/security/managing-secure-environment-variables-with-secrets.md) for the Liferay service.
+
+1. Add the Dynatrace `tenant` Dynatrace environment variables to the `LCP.json` file in the Liferay service's production environment. For example:
 
 ```json
 {
 	"environments": {
 	  "prd": {
 	    "env": {
-	      "LCP_PROJECT_MONITOR_DYNATRACE_TENANT": "tot02934",
-	      "LCP_PROJECT_MONITOR_DYNATRACE_TOKEN": "dDKSowkdID8dKDkCkepW"
+	      "LCP_PROJECT_MONITOR_DYNATRACE_TENANT": "tot02934"
 	    }
 	  }
 	}
@@ -75,8 +76,10 @@ Follow these steps to integrate Dynatrace:
 
 | Name | Description |
 | --- | --- |
-`LCP_PROJECT_MONITOR_DYNATRACE_TENANT` | A string with eight characters. It is part of the URL (prefix) of your Dynatrace SaaS account. |
-`LCP_PROJECT_MONITOR_DYNATRACE_TOKEN` | A string with 22 characters that you can find in your Dynatrace account at *Deploy Dynatrace* &rarr; *Start installation* &rarr; *Set up PaaS monitoring* &rarr; *Installer Download*. |
+`LCP_PROJECT_MONITOR_DYNATRACE_TENANT` | A string of characters that is part of the URL (prefix) of your Dynatrace SaaS account. |
+`LCP_PROJECT_MONITOR_DYNATRACE_TOKEN` | A string of characters that you can find in your Dynatrace account. To get the token, navigate to *Manage* &rarr; *Deploy Dynatrace* &rarr; *Set up PaaS Integration*, then enter the environment ID and click *Generate new token*. |
+
+See the [official Dynatrace documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication/) for more information about these values.
 
 ### Accessing Dynatrace
 
@@ -99,4 +102,3 @@ Log in with your Dynatrace credentials to check log trails and create custom das
 * [Introduction to the Liferay DXP Service](../using-the-liferay-dxp-service/introduction-to-the-liferay-dxp-service.md)
 * [Real-Time Alerts](./real-time-alerts.md)
 * [Quotas](./quotas.md)
-* [Advanced Monitoring: APM Tools - Dynatrace](https://help.liferay.com/hc/en-us/articles/360017896452-Advanced-Monitoring-APM-Tools-Dynatrace)

@@ -1,0 +1,6 @@
+Bundle-Name: Acme I2F4 Implementation
+Bundle-SymbolicName: com.acme.i2f4.impl
+Bundle-Version: 1.0.0
+Provide-Capability:\
+	liferay.language.resources;\
+		resource.bundle.base.name="content.Language"

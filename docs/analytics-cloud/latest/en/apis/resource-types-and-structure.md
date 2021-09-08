@@ -9,7 +9,6 @@ Account represents a company or organization that is interacting with your websi
    "activeIndividualsCount":0,
    "dateCreated":"2019-12-27T19:17:49.924Z",
    "dateModified":"2019-12-27T19:17:49.924Z",
-   "engagementScore":0.0,
    "id":"386700295379617992",
    "individualsCount":5,
    "properties":{ 
@@ -45,12 +44,11 @@ Account represents a company or organization that is interacting with your websi
 } 
 ```
 
-### Properties
+**Properties**
 
 * `activeIndividualsCount` (Number): Number of active individuals belonging to the account.
 * `dateCreated` (Date): Date the account was created in the system.
 * `dateModified` (Date): Date of the last modification of the account properties.
-* `engamentScore` (Number): Number that averages the engagement score of each individual that belongs to the account.
 * `ID` (String): Unique identifier of the account;
 * `individualsCount` (Number): Number of individuals belonging to the account, active or inactive individuals are considered in this metric. 
 * `Properties`: Key/Value (String) map of the account dynamic properties, examples might include industry, fax, phone, etc.
@@ -86,7 +84,7 @@ Individual represents any user who accessed your portal. The individual can be k
 }
 ```
 
-### Properties
+**Properties**
 
 * `Demographics` Key/Value (String:) Map of the individuals demographics dynamic properties; Examples might include gender, birthDate, email, etc.
 * `ID` (String): Unique identifier of the individual.
@@ -115,7 +113,7 @@ Segments are a group of individuals that share similar characteristics. Segments
 }
 ```
 
-### Properties
+**Properties**
 
 * `dateCreated` (Date): Date the segment was created in the system.
 * `ID` (String): Unique identifier of the segment.
@@ -127,7 +125,7 @@ Segments are a group of individuals that share similar characteristics. Segments
 
 ## Pages
 
-Pages information represents aggregated interaction data with any tracked page. Each page URL will contain properties such as engagement score, number of views for a page, etc. All the properties can be seen below.
+Pages information represents aggregated interaction data with any tracked page. Each page URL will contain properties such as time on page, number of views for a page, etc. All the properties can be seen below.
 
 ```json
 { 
@@ -148,14 +146,6 @@ Pages information represents aggregated interaction data with any tracked page. 
              "trendClassification":"NEUTRAL"
          },
          "value":264283.0
-      },
-      "engagementMetric":{ 
-         "previousValue":0.0,
-            "trend":{ 
-               "percentage":null,
-               "trendClassification":"NEUTRAL"
-            },
-            "value":0.13333333333333333
       },
       "exitRateMetric":{ 
          "previousValue":0.0,
@@ -263,7 +253,7 @@ Pages information represents aggregated interaction data with any tracked page. 
 }
 ```
 
-### Properties
+**Properties**
 
 * `title` (String): The page title.
 * `metrics` (Metric): The list of metric values of the page; Each page is uniquely identified by the title, url pair.
@@ -274,3 +264,229 @@ Pages information represents aggregated interaction data with any tracked page. 
     * `Value` (Number): metric value, depends on the rangeKey, if the selected rangeKey is 30, value will represent the aggregated data from the last 30 days.
     * `previousValue` (Number): previous metric value. It also depends on the requested rangeKey, if the selected rangeKey is 30, previous value will aggregate data from today - 60days until today - 30days.
 * `url` (String): The page URL
+
+## Assets 
+
+Asset information represents aggregated interaction data with any tracked asset page. Any page URL could contain multiple assets. Asset metrics is a complement to the page report, and it offers a more in-depth view of page interactions. There are four assets available: blogs, documents and media, forms, and web content. Each of these assets has a specific endpoint:
+
+* Blogs - [https://analytics.liferay.com/api/reports/blogs](https://analytics.liferay.com/api/reports/blogs)
+* Documents And Media - [https://analytics.liferay.com/api/reports/documents-and-media](https://analytics.liferay.com/api/reports/documents-and-media)
+* Forms - [https://analytics.liferay.com/api/reports/forms](https://analytics.liferay.com/api/reports/forms)
+* Web Content - [https://analytics.liferay.com/api/reports/web-contents](https://analytics.liferay.com/api/reports/web-contents)
+
+Each asset contains its own set of properties.
+
+### Blogs
+
+```json
+ {
+      "id": "107694635",
+      "title": "Awesome Web Portal Examples",
+      "metrics": {
+        "readingTimeMetric": {
+          "value": 71788.99821937321
+        },
+        "clicksMetric": {
+          "value": 1969.0
+        },
+        "viewsMetric": {
+          "value": 3253.0
+        },
+        "ratingsMetric": {
+          "value": 0.0
+        },
+        "commentsMetric": {
+          "value": 0.0
+        }
+      },
+      "_links": {
+        "self": {
+          "href": "https://analytics.liferay.com/api/reports/blogs/107694635?blogTitle=16%20Awesome%20Web%20Portal%20Examples&rangeKey=30"
+        }
+      }
+```
+
+**Properties**
+
+* `ID` (String): Unique identifier of the blog.
+* `Title` (String) : Title used for the blog.
+* `Reading Time Metric` (Double): Average user time spent reading the blog.
+* `Clicks Metric` (Double): Sum of user clicks on the blog.
+* `Views Metric` (Double): Sum of user views of the blog.
+* `Ratings Metric` (Double): Average rating (1-5 range) of the blog over that selection period.
+* `Comments Metric` (Double): Sum of comments added to the blog.
+
+### Documents and Media
+
+```json
+{
+      "id": "320981007",
+      "title": "My Awesome Document",
+      "metrics": {
+        "downloadsMetric": {
+          "value": 6.0
+        },
+        "ratingsMetric": {
+          "value": 0.0
+        },
+        "commentsMetric": {
+          "value": 0.0
+        },
+        "previewsMetric": {
+          "value": 286.0
+        }
+      },
+      "_links": {
+        "self": {
+          "href": "https://analytics.liferay.com/api/reports/documents-and-media/320981007?documentTitle=My%20Awesome%20Document&rangeKey=30"
+      }
+}
+```
+
+**Properties**
+
+* `ID` (String): Unique identifier of the document or media.
+* `Title` (String) : Title used for the document or media.
+* `Downloads Metric` (Double): Sum of user downloads of the document or media.
+* `Ratings Metric` (Double): Average rating (1-5 range) of the document or media over that selection period.
+* `Comments Metric` (Double): Sum of comments added to the document or media.
+* `Previews Metric` (Double): Sum of user previews of the document or media.
+
+### Forms
+
+```json
+{
+      "id": "872a3ca0-324d-438a-9d82-e4cad68c3a20",
+      "title": "Blog Subscription",
+      "metrics": {
+        "viewsMetric": {
+          "value": 20409.0
+        },
+        "abandonmentsMetric": {
+          "value": 0.9989710421872703
+        },
+        "submissionsMetric": {
+          "value": 22.0
+        },
+        "completionTimeMetric": {
+          "value": 33645.77272727273
+        }
+      },
+      "_links": {
+        "self": {
+          "href": "https://analytics.liferay.com/api/reports/forms/872a3ca0-324d-438a-9d82-e4cad68c3a20?formTitle=Blog%20Subscription&rangeKey=30"
+        },
+        "pages": {
+          "href": "https://analytics.liferay.com/api/reports/forms/872a3ca0-324d-438a-9d82-e4cad68c3a20/pages?formTitle=Blog%20Subscription&rangeKey=30"
+        }
+      }
+```
+
+**Properties**
+
+* `ID` (String): Unique identifier of the form.
+* `Title` (String): Title used for the form.
+* `Views Metric` (Double): Sum of user views of the form.
+* `Abandonments Metric` (Double): Rate of abandonment of form (0-1 range).
+* `Submissions Metric` (Double): Sum of submissions of the form.
+* `Completion Time Metric` (Double): Average user time for completion of the form.
+
+You can also follow the pages link and see the form page metrics information. It shows form metrics by page and form fields:
+
+```json
+{
+  "formId": "872a3ca0-324d-438a-9d82-e4cad68c3a20",
+  "formTitle": "Blog Subscription",
+  "formPages": [
+    {
+      "id": "0",
+      "title": "",
+      "fields": {
+        "name_field": {
+          "metrics": {
+            "fieldInteractionsMetric": {
+              "value": 6.0
+            },
+            "fieldInteractionsDurationMetric": {
+              "value": 0.0
+            },
+            "fieldRefilledMetric": {
+              "value": 3.0
+            },
+            "fieldAbandonmentsMetric": {
+              "value": 3.0
+            }
+          }
+        },
+        "email_field": {
+          "metrics": {
+            "fieldInteractionsMetric": {
+              "value": 86.0
+            },
+            "fieldInteractionsDurationMetric": {
+              "value": 223983.0
+            },
+            "fieldRefilledMetric": {
+              "value": 34.0
+            },
+            "fieldAbandonmentsMetric": {
+              "value": 10.0
+            }
+          }
+        }       
+      },
+      "metrics": {
+        "pageViewsMetric": {
+          "value": 20409.0
+        },
+        "pageAbandonmentsMetric": {
+          "value": 20388.0
+        }
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "https://analytics.liferay.com/api/reports/forms/872a3ca0-324d-438a-9d82-e4cad68c3a20/pages?formTitle=Blog%20Subscription&rangeKey=30"
+    },
+    "parent": {
+      "href": "https://analytics.liferay.com/api/reports/forms/872a3ca0-324d-438a-9d82-e4cad68c3a20?formTitle=Blog%20Subscription&rangeKey=30"
+    }
+  }
+}
+```
+
+**Properties**
+
+* `Form ID` (String): Unique identifier of the form.
+* `Form Title` (String): Title used for the form.
+* `Field Interactions Metric` (Double): Sum of user interaction of the form field.
+* `Field Interactions Duration Metric` (Double): Average interaction time of the form field.
+* `Field Abandonments Metric` (Double): Sum of user abandonment of the form at this field.
+* `Page Views Metric` (Double): Sum of user views of the form page.
+* `Page Abandonments Metric` (Double): Sum of user abandonment of the form at this page.
+
+### Web Content
+
+```json
+ {
+      "id": "231976097",
+      "title": "My Web Content",
+      "metrics": {
+        "viewsMetric": {
+          "value": 280756.0
+        }
+      },
+      "_links": {
+        "self": {
+          "href": "https://analytics.liferay.com/api/reports/web-contents/231976097?webContentTitle=My%20Web%20Content&rangeKey=30"
+        }
+      }
+    }
+```
+
+**Properties**
+
+* `ID` (String): Unique identifier of the web content.
+* `Title` (String): Title used for the web content.
+* `Views Metric` (Double): Sum of user views of the web content.
