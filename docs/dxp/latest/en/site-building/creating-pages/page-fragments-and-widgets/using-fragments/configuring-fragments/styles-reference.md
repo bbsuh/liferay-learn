@@ -33,7 +33,7 @@ Configure the spacing around the Fragment by clicking on the regions surrounding
 When you click one of these regions, a list appears with pre-defined options for how many pixels to set the chosen spacing size to. These sizes come from the numbered *Spacer* fields in the Spacing category when you [create or edit the Style Book](../../../../site-appearance/style-books/using-a-style-book-to-standardize-site-appearance.md#spacing).
 
 ```{note}
-If the spacing options in your Style Book are defined in units other then pixels (such as `rem`), then they are converted to the equivalent number of pixels when you are selecting them in a Fragment's Styles configuration.
+If the spacing options in your Style Book are defined in units other than pixels (such as `rem`), then they are converted to the equivalent number of pixels when you are selecting them in a Fragment's Styles configuration.
 ```
 
 ![When you click any of the regions, choose the desired spacing from the list of sizes shown.](./styles-reference/images/03.png)
